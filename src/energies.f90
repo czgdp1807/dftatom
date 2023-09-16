@@ -46,7 +46,7 @@ function thomas_fermi_potential(R, Z, cut) result(V)
 real(dp), intent(in) :: R(:) ! Radial grid
 integer, intent(in) :: Z     ! Atomic number
 logical, intent(in), optional :: cut ! Cut the potential, default .true.
-real(dp) :: x(size(R)), Z_eff(size(R)), V(size(R))
+real(dp) :: x(size(R)), Z_eff(size(R)), V(size(R)), tmp_1(size(R)), tmp_2(size(R))
 real(dp) :: alpha, beta, gamma
 
 x = R * (128*Z/(9*pi**2)) ** (1.0_dp/3)
@@ -60,8 +60,10 @@ x = R * (128*Z/(9*pi**2)) ** (1.0_dp/3)
 alpha = 0.7280642371_dp
 beta = -0.5430794693_dp
 gamma = 0.3612163121_dp
-Z_eff = Z * (1 + alpha*sqrt(x) + beta*x*exp(-gamma*sqrt(x)))**2 * &
-    exp(-2*alpha*sqrt(x))
+tmp_1 = -gamma*sqrt(x)
+tmp_2 = -2*alpha*sqrt(x)
+Z_eff = Z * (1 + alpha*sqrt(x) + beta*x*exp(tmp_1))**2 * &
+    exp(tmp_2)
 ! This keeps all the eigenvalues of the radial problem negative:
 if (.not. present(cut)) where (Z_eff < 1) Z_eff = 1
 V = -Z_eff / r
