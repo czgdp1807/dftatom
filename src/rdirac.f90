@@ -118,6 +118,7 @@ real(dp), dimension(size(R)) :: u1, u2, u1p, u2p
 integer :: i
 real(dp) :: Delta, M(2, 2), u1_tmp, u2_tmp
 real(dp) :: R_max
+real(dp) :: tmp_1(4)
 
 nr = size(R)
 
@@ -143,8 +144,10 @@ end do
 u1(i_max+4:) = 0
 u2(i_max+4:) = 0
 
-u1(i_max:i_max+4) = exp(-lambda * (R(i_max:i_max+4)-R(1))) / sqrt(-E/(E+2*c**2))
-u2(i_max:i_max+4) = -exp(-lambda * (R(i_max:i_max+4)-R(1)))
+tmp_1 = -lambda * (R(i_max:i_max+4)-R(1))
+
+u1(i_max:i_max+4) = exp(tmp_1) / sqrt(-E/(E+2*c**2))
+u2(i_max:i_max+4) = -exp(tmp_1)
 
 Ctot(:, 1, 1) = -kappa / R
 Ctot(:, 2, 2) = +kappa / R
