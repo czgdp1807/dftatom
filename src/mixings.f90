@@ -22,7 +22,7 @@ real(dp) :: mixing_linear(size(x0))
 interface
     function R(x, i, d)
     use types
-    use dft_data
+    ! use dft_data
     implicit none
     real(dp), intent(in) :: x(:) ! "x"
     integer, intent(in) :: i ! iteration #
@@ -49,7 +49,7 @@ real(dp) :: mixing_linear_adapt(size(x0)), alpha
 interface
     function R(x, i, d)
     use types
-    use dft_data
+    ! use dft_data
     implicit none
     real(dp), intent(in) :: x(:) ! "x"
     integer, intent(in) :: i ! iteration #
@@ -93,7 +93,7 @@ real(dp) :: mixing_anderson(size(x0))
 interface
     function R(x, i, d)
     use types
-    use dft_data
+    ! use dft_data
     implicit none
     real(dp), intent(in) :: x(:) ! "x"
     integer, intent(in) :: i ! iteration #
