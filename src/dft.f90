@@ -32,12 +32,12 @@ call total_energy(d%fo, d%ks_energies, d%V_tot, d%V_h, d%V_coulomb, d%e_xc, &
 d%V_tot = d%V_coulomb + d%V_xc + d%V_h
 end subroutine
 
-subroutine V2rho(d, size_R)
+subroutine V2rho(d)
 ! Calculates rho from V by solving Kohn-Sham equations
 type(dft_data_t), intent(inout) :: d
-integer, intent(in) :: size_R
-real(dp), dimension(size_R) :: P, Q, Y, tmp
-integer :: converged, i, n, l, relat, j
+
+real(dp), dimension(size(d%R)) :: P, Q, Y
+integer :: converged, i, n, l, relat
 real(dp) :: Ein, Emin_init, Emax_init
 
 d%rho(:) = 0
@@ -72,9 +72,7 @@ do i = 1, size(d%no)
     else
         Y = sqrt(P**2 + Q**2) / d%R
     end if
-    do j = 1, size(d%R)
-        d%rho(j) = d%rho(j) + d%fo(i) * Y(j)**2
-    end do
+    d%rho = d%rho + d%fo(i) * Y**2
     d%orbitals(:, i) = Y
 end do
 d%rho = d%rho / (4*pi)
@@ -90,7 +88,7 @@ real(dp) :: F(size(V))
 d%scf_iter = i
 ! We converge upon the non-Coulombic part of the potential:
 d%V_tot = d%V_coulomb + V
-call V2rho(d, size(d%R))
+call V2rho(d)
 call rho2V(d)
 F = d%V_xc + d%V_h - V
 end function
