@@ -37,7 +37,7 @@ subroutine V2rho(d)
 type(dft_data_t), intent(inout) :: d
 
 real(dp), dimension(size(d%R)) :: P, Q, Y
-integer :: converged, i, n, l, relat, j
+integer :: converged, i, n, l, relat
 real(dp) :: Ein, Emin_init, Emax_init
 
 d%rho(:) = 0
@@ -75,9 +75,7 @@ do i = 1, size(d%no)
     else
         Y = sqrt(P**2 + Q**2) / d%R
     end if
-    do j = 1, size(d%R)
-        d%rho(j) = d%rho(j) + d%fo(i) * Y(j)**2
-    end do
+    d%rho = d%rho + d%fo(i) * Y**2
     d%orbitals(:, i) = Y
 end do
 d%rho = d%rho / (4*pi)
