@@ -45,7 +45,7 @@ real(dp), dimension(size(R)) :: u1, u2, u1p, u2p
 integer :: i
 real(dp) :: lambda, Delta, M(2, 2), u1_tmp, u2_tmp
 real(dp) :: Vmid(3)
-real(dp) :: tmp(4), tmp_1(size(V))
+real(dp) :: tmp(4)
 
 if (size(R) < 4) call stop_error("size(R) <= 4")
 tmp = R(:4)
@@ -58,11 +58,11 @@ if (imax /= 4) call stop_error("rk4 failed")
 Ctot(:, 1, 1) = -kappa / R
 Ctot(:, 2, 2) = +kappa / R
 Ctot(:, 1, 2) = +(E-V)/c + 2*c
-tmp_1 = -(E-V)
-Ctot(:, 2, 1) = tmp_1/c
+Ctot(:, 2, 1) = -(E-V)/c
 
 u1p(:4) = Rp(:4) * (Ctot(:4, 1, 1) * u1(:4) + Ctot(:4, 1, 2) * u2(:4))
 u2p(:4) = Rp(:4) * (Ctot(:4, 2, 1) * u1(:4) + Ctot(:4, 2, 2) * u2(:4))
+
 do i = 4, size(R)-1
     u1p(i) = Rp(i) * (Ctot(i, 1, 1)*u1(i) + Ctot(i, 1, 2)*u2(i))
     u2p(i) = Rp(i) * (Ctot(i, 2, 1)*u1(i) + Ctot(i, 2, 2)*u2(i))
@@ -120,7 +120,7 @@ real(dp), dimension(size(R), 2, 2) :: Ctot
 real(dp), dimension(size(R)) :: u1, u2, u1p, u2p
 integer :: i
 real(dp) :: Delta, M(2, 2), u1_tmp, u2_tmp
-real(dp) :: R_max, tmp(size(V)), tmp_1(5)
+real(dp) :: R_max, tmp_1(5)
 
 nr = size(R)
 
@@ -152,8 +152,7 @@ u2(i_max:i_max+4) = -exp(-lambda * (R(i_max:i_max+4)-R(1)))
 Ctot(:, 1, 1) = -kappa / R
 Ctot(:, 2, 2) = +kappa / R
 Ctot(:, 1, 2) = +(E-V)/c + 2*c
-tmp = -(E-V)
-Ctot(:, 2, 1) = tmp/c
+Ctot(:, 2, 1) = -(E-V)/c
 
 do i = i_max, i_max+4
     u1p(i) = Rp(i) * &
@@ -282,7 +281,7 @@ real(dp), intent(out) :: P(:)
 integer, intent(out) :: imax
 
 real(dp), parameter :: max_val = 1e6_dp
-real(dp) :: y(2), tmp(size(V))
+real(dp) :: y(2)
 real(dp), dimension(size(R), 2, 2) :: Ctot
 real(dp), dimension(size(R)-1, 2, 2) :: Cmid
 real(dp), dimension(size(R)-1) :: Rmid
@@ -310,14 +309,13 @@ end if
 Ctot(:, 1, 1) = -kappa / R
 Ctot(:, 2, 2) = +kappa / R
 Ctot(:, 1, 2) = +(E-V)/c + 2*c
-tmp = -(E-V)
-Ctot(:, 2, 1) = tmp/c
+Ctot(:, 2, 1) = -(E-V)/c
+
 Rmid = (R(:size(R)-1) + R(2:)) / 2
 Cmid(:, 1, 1) = -kappa / Rmid
 Cmid(:, 2, 2) = +kappa / Rmid
 Cmid(:, 1, 2) = +(E-Vmid)/c + 2*c
-tmp = -(E-Vmid)
-Cmid(:, 2, 1) = tmp/c
+Cmid(:, 2, 1) = -(E-Vmid)/c
 call rk4_integrate4(R, y, Ctot, Cmid, max_val, P, Q, imax)
 end subroutine
 

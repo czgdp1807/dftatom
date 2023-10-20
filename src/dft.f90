@@ -107,9 +107,8 @@ real(dp), intent(in) :: e_xc(:) ! XC density
 real(dp), intent(in) :: R(:), Rp(:), n(:) ! Radial grid, number density (positive)
 real(dp), intent(out) :: Etot ! Total energy
 real(dp), intent(out) :: T_s, E_ee, E_en, EE_xc ! Parts of the total energy
-real(dp) :: tmp_V_coulomb(size(R))
+
 real(dp) :: rho(size(n))
-integer :: i
 real(dp) :: E_c, E_band!, Exc2
 rho = -n
 
@@ -117,8 +116,7 @@ E_band = sum(fo * ks_energies)
 T_s = E_band + 4*pi * integrate(Rp, V_in * rho * R**2)
 
 E_ee = -2*pi * integrate(Rp, V_h * rho * R**2)
-tmp_V_coulomb = -V_coulomb
-E_en =  4*pi * integrate(Rp, tmp_V_coulomb * rho * R**2)
+E_en =  4*pi * integrate(Rp, (-V_coulomb) * rho * R**2)
 E_c = E_ee + E_en
 
 EE_xc = -4*pi * integrate(Rp, e_xc * rho * R**2)
