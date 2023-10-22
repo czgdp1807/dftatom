@@ -120,7 +120,7 @@ real(dp), dimension(size(R), 2, 2) :: Ctot
 real(dp), dimension(size(R)) :: u1, u2, u1p, u2p
 integer :: i
 real(dp) :: Delta, M(2, 2), u1_tmp, u2_tmp
-real(dp) :: R_max, tmp_1(5)
+real(dp) :: R_max
 
 nr = size(R)
 
@@ -154,14 +154,12 @@ Ctot(:, 2, 2) = +kappa / R
 Ctot(:, 1, 2) = +(E-V)/c + 2*c
 Ctot(:, 2, 1) = -(E-V)/c
 
-do i = i_max, i_max+4
-    u1p(i) = Rp(i) * &
-        (Ctot(i, 1, 1)*u1(i) &
-            + Ctot(i, 1, 2) * u2(i))
-    u2p(i) = Rp(i) * &
-        (Ctot(i, 2, 1)*u1(i) &
-            + Ctot(i, 2, 2) * u2(i))
-end do
+u1p(i_max:i_max+4) = Rp(i_max:i_max+4) * &
+    (Ctot(i_max:i_max+4, 1, 1)*u1(i_max:i_max+4) &
+        + Ctot(i_max:i_max+4, 1, 2) * u2(i_max:i_max+4))
+u2p(i_max:i_max+4) = Rp(i_max:i_max+4) * &
+    (Ctot(i_max:i_max+4, 2, 1)*u1(i_max:i_max+4) &
+        + Ctot(i_max:i_max+4, 2, 2) * u2(i_max:i_max+4))
 
 do i = i_max, 2, -1
     u1p(i) = Rp(i) * (Ctot(i, 1, 1)*u1(i) + Ctot(i, 1, 2)*u2(i))
